@@ -2,7 +2,6 @@ package com.example.baf.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
@@ -59,7 +58,7 @@ public class VerificationToken {
         this.expiryDate = expiryDate;
     }
 
-    public void updateToken(final String token) {
+    public void updateToken(String token) {
         this.token = token;
         this.expiryDate = calculateExpiryDate();
     }

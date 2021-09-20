@@ -7,8 +7,6 @@ import java.util.Objects;
 @Entity
 public class PasswordResetToken {
 
-    private final int EXPIRATION = 60 * 24;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,7 +25,7 @@ public class PasswordResetToken {
     public PasswordResetToken(String token, User user) {
         this.token = token;
         this.user = user;
-        this.expiryDate = LocalDateTime.now().plusMinutes(EXPIRATION);
+        this.expiryDate = calculateExpiryDate();
     }
 
     public String getToken() {
@@ -54,9 +52,15 @@ public class PasswordResetToken {
         this.expiryDate = expiryDate;
     }
 
-    public void updateToken(final String token) {
+    public void updateToken(String token) {
         this.token = token;
-        this.expiryDate = LocalDateTime.now().plusMinutes(EXPIRATION);
+        this.expiryDate = calculateExpiryDate();
+    }
+
+    private LocalDateTime calculateExpiryDate() {
+        int expiration = 60 * 24;
+        LocalDateTime now = LocalDateTime.now();
+        return now.plusMinutes(expiration);
     }
 
     @Override
