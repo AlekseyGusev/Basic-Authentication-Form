@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
@@ -35,7 +36,7 @@ public class User {
     private Boolean enabled;
 
     @Column(nullable = false)
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
     public User() {
         this.enabled = false;

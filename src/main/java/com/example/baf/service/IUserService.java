@@ -4,7 +4,6 @@ import com.example.baf.model.PasswordResetToken;
 import com.example.baf.model.User;
 import com.example.baf.model.VerificationToken;
 import com.example.baf.validation.EmailExistsException;
-import org.springframework.stereotype.Service;
 
 public interface IUserService {
 
