@@ -12,6 +12,7 @@ public class BafWebConfiguration implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("loginPage");
         registry.addViewController("forgotPassword").setViewName("forgotPassword");
+        registry.addViewController("/profile").setViewName("profile");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
 }

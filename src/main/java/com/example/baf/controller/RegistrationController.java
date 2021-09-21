@@ -13,7 +13,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +45,7 @@ public class RegistrationController {
         this.mailSender = mailSender;
     }
 
-// REGISTRATION
+    // REGISTRATION
 
     @RequestMapping("/signup")
     public ModelAndView registrationForm() {
@@ -105,17 +104,24 @@ public class RegistrationController {
     @PostMapping("/user/resetPassword")
     public ModelAndView resetPassword(@RequestParam("email") String userEmail, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
-        User user = userService.findUserByEmail(userEmail);
+        if (userEmail.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Email cannot be empty");
+        } else {
 
-        if (user != null) {
-            String token = UUID.randomUUID().toString();
-            userService.createPasswordResetTokenForUser(user, token);
-            String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-            SimpleMailMessage email = constructResetToken(appUrl, user, token);
-            mailSender.send(email);
+            User user = userService.findUserByEmail(userEmail);
+
+            if (user != null) {
+                String token = UUID.randomUUID().toString();
+                userService.createPasswordResetTokenForUser(user, token);
+                String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+                SimpleMailMessage email = constructResetToken(appUrl, user, token);
+                mailSender.send(email);
+                redirectAttributes.addFlashAttribute("message", "You should receive an Password Reset Email shortly");
+            } else {
+                redirectAttributes.addFlashAttribute("error", String.format("User with email: %s not found", userEmail));
+            }
         }
 
-        redirectAttributes.addFlashAttribute("message", "You should receive an Password Reset Email shortly");
         return new ModelAndView("redirect:/login");
     }
 
